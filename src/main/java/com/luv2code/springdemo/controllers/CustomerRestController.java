@@ -3,10 +3,7 @@ package com.luv2code.springdemo.controllers;
 import com.luv2code.springdemo.entity.Customer;
 import com.luv2code.springdemo.exceptions.CustomerNotFoundException;
 import com.luv2code.springdemo.service.CustomerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +32,33 @@ public class CustomerRestController {
         }
 
         return customer;
+    }
+
+    @PostMapping("/customers")
+    public Customer addCustomer(@RequestBody Customer customer) {
+
+        // this is force to create new item in database instead of update it
+        customer.setId(0);
+        customerService.saveCustomer(customer);
+        return customer;
+    }
+
+    @PutMapping("/customers")
+    public Customer updateCustomer(@RequestBody Customer customer) {
+        customerService.saveCustomer(customer);
+        return customer;
+    }
+
+    @DeleteMapping("/customers/{customerId}")
+    public String deleteCustomer(@PathVariable int customerId) {
+        Customer customer = customerService.getCustomer(customerId);
+
+        if (customer == null) {
+            throw new CustomerNotFoundException("Customer id " + customerId + " not found");
+        }
+
+        customerService.deleteCustomer(customerId);
+
+        return "Deleted customer ID is " + customerId;
     }
 }
