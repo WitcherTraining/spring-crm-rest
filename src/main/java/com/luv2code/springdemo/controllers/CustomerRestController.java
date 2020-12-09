@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api")
 public class CustomerRestController {
 
@@ -43,8 +44,8 @@ public class CustomerRestController {
         return customer;
     }
 
-    @PutMapping("/customers")
-    public Customer updateCustomer(@RequestBody Customer customer) {
+    @PutMapping("/customers/{id}")
+    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
         customerService.saveCustomer(customer);
         return customer;
     }
